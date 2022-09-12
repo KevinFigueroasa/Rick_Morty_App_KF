@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
 import useLocationRandom from '../hooks/useLocationRandom';
+import axios from 'axios';
 import Locations from './Locations';
 
 const HeaderInput = () => {
 
-    const { locationId, setLocationId, searchLocationById, fun} = useLocationRandom()
+    const { setLocation, fun} = useLocationRandom()
+
+    const [locationId, setLocationId] = useState("")
+
+    const searchLocationById = () => {
+        axios
+        .get(`https://rickandmortyapi.com/api/location/${locationId}`)
+        .then(res => setLocation(res.data))
+    }
 
     return (
         <div className='header_app'>
@@ -14,7 +23,7 @@ const HeaderInput = () => {
                 value={locationId}
                 onChange={e => setLocationId(e.target.value)}
                 placeholder='Search a location'/>
-                <button onClick={fun}>Run</button>
+                <button onClick={searchLocationById}>Run</button>
                 {/* {
                     fun()
                 } */}

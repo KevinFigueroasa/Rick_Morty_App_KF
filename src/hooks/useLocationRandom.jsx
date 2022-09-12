@@ -5,7 +5,7 @@ import axios from "axios";
 const useLocationRandom = () => {
 
     const [location, setLocation] = useState({})
-    const [locationId, setLocationId] = useState("")
+
 
 
     useEffect(() => {
@@ -15,11 +15,7 @@ const useLocationRandom = () => {
         .then(rest => setLocation(rest.data))
     }, [])
 
-    const searchLocationById = () => {
-        axios
-        .get(`https://rickandmortyapi.com/api/location/${locationId}`)
-        .then(res => setLocation(res.data))
-    }
+
 
     console.log(location)
 
@@ -55,7 +51,7 @@ const useLocationRandom = () => {
         );
     }
 
-    return { location, fun, setLocation, searchLocationById, setLocationId, locationId}
+    return { location, fun, setLocation}
 };
 
 export default useLocationRandom;
