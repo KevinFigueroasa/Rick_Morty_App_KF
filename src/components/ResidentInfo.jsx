@@ -2,21 +2,19 @@ import axios from 'axios';
 import React from 'react';
 import { useEffect, useState } from 'react';
 
-const ResidentInfo = ({url_resident}) => {
+const ResidentInfo = ({resident}) => {
+
 
     const [getResident, setGetResident] = useState('')
 
     useEffect(() => {
         axios
-        .get(`${url_resident}`)
+        .get(`${resident}`)
         .then(res => setGetResident(res.data))
     }, [])
 
-    // console.log(getResident)
-
     return (
         <div className='residents-cards' >
-            <div className='resident-card'>
                 <div className='dead-alive'>
                     <p style={getResident.status === 'Alive' ? {background: 'green'} : getResident.status === 'Dead' ? {background: 'red'} : {background: 'grey'}}>{getResident.status}</p>
                     <img src={getResident.image} alt=""/>
@@ -33,7 +31,6 @@ const ResidentInfo = ({url_resident}) => {
                         <p>{getResident.episode?.length}</p>
                     </h3>
                 </div>
-            </div>
         </div>
     );
 };
