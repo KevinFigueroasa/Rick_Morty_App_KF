@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 
 const ResidentInfo = ({resident}) => {
 
-
-    const [getResident, setGetResident] = useState('')
+    // const [locationId, setLocationId] = useState("")
+    const [getResident, setGetResident] = useState({})
 
     useEffect(() => {
         axios
@@ -14,11 +14,11 @@ const ResidentInfo = ({resident}) => {
     }, [])
 
     return (
-        <div className='residents-cards' >
+        <div className='residents-cards'>
                 <div className='dead-alive'>
                     <p style={getResident.status === 'Alive' ? {background: 'green'} : getResident.status === 'Dead' ? {background: 'red'} : {background: 'grey'}}>{getResident.status}</p>
-                    <img src={getResident.image} alt=""/>
-                </div>
+                    <img src={getResident.image}/>
+
                 <div className='residents-info'>
                     <h2>{getResident.name}</h2>
                     <h3>Raza
@@ -30,6 +30,7 @@ const ResidentInfo = ({resident}) => {
                     <h3>Veces en debut
                         <p>{getResident.episode?.length}</p>
                     </h3>
+                </div>
                 </div>
         </div>
     );

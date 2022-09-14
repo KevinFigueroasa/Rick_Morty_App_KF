@@ -52,10 +52,8 @@ const Locations = () => {
                     <h1>{location.name}</h1>
                     <div className='residents'>
                         {
-                            location.residents?.map(resident => (
-                                <ResidentInfo
-                                resident={resident}
-                                key={resident.url}/>
+                            location.residents?.map((resident) => (
+                                <ResidentInfo key={resident} resident={resident}/>
                             ))
                         }
                     </div>
