@@ -25,7 +25,6 @@ const Locations = () => {
 
     const onShowSuggest = ({ target }) => {
         setInputValue(target.value);
-        setIsOpened(true)
         if (target.value) {
             document.querySelector('.search').classList.add('open'); // Esto hace que la Opacidad establecida en 0 en la clase Suggests se convierta en 1 al agregar la clase open que tienen la propiedad opacity: 1;
         } else {
@@ -37,6 +36,7 @@ const Locations = () => {
         axios
             .get(`https://rickandmortyapi.com/api/location?name=${inputValue}`)
             .then(res => setSuggestions(res.data.results))
+            setIsOpened(true)
     }, [inputValue])
 
 
