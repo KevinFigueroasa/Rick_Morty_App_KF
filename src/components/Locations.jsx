@@ -8,6 +8,7 @@ const Locations = () => {
     const [suggestions, setSuggestions] = useState([])
     const [location, setLocation] = useState({})
     const [selectedLocation, setSelectedLocation] = useState('')
+    const [selectedPage, setSelectedPage] = useState(0);
 
     useEffect(() => {
         const randomId = Math.floor(Math.random() * 126) + 1
@@ -21,8 +22,6 @@ const Locations = () => {
             .get(`https://rickandmortyapi.com/api/location/${inputValue}`)
             .then(res => setLocation(res.data))
     }
-
-    // console.log('suggestions', suggestions)
 
     const onShowSuggest = ({ target }) => {
         setInputValue(target.value);
@@ -48,11 +47,17 @@ const Locations = () => {
 
     const onSelectedLocation = ({ target }) => {
         setSelectedLocation(target.textContent)
-        axios
-        .get(`https://rickandmortyapi.com/api/location/${suggestions[0].id}`)
-        .then(res => setLocation(res.data))
-        setInputValue('');
+        setSelectedPage(0);
     }
+
+    useEffect(() => {
+        axios
+            .get(`https://rickandmortyapi.com/api/location?name=${selectedLocation}`)
+            .then(res => setLocation(res.data.results[0]))
+        setInputValue('');
+    }, [selectedLocation])
+
+    console.log(location)
 
     return (
         <div className='header_app'>
