@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import ResidentInfo from './ResidentInfo'
+import useOnclickOutside from 'react-cool-onclickoutside';
 
 const Locations = () => {
+
+    const [isOpened, setIsOpened] = useState(false)
 
     const [inputValue, setInputValue] = useState("")
     const [suggestions, setSuggestions] = useState([])
@@ -10,12 +13,9 @@ const Locations = () => {
     const [selectedLocation, setSelectedLocation] = useState('')
     const [selectedPage, setSelectedPage] = useState(0);
 
-    useEffect(() => {
-        const randomId = Math.floor(Math.random() * 126) + 1
-        axios
-            .get(`https://rickandmortyapi.com/api/location/${randomId}`)
-            .then(rest => setLocation(rest.data))
-    }, [])
+    const ref = useOnclickOutside(() => {
+        setIsOpened(false)
+    })
 
     const searchLocationById = () => {
         axios
@@ -25,13 +25,12 @@ const Locations = () => {
 
     const onShowSuggest = ({ target }) => {
         setInputValue(target.value);
-
+        setIsOpened(true)
         if (target.value) {
             document.querySelector('.search').classList.add('open'); // Esto hace que la Opacidad establecida en 0 en la clase Suggests se convierta en 1 al agregar la clase open que tienen la propiedad opacity: 1;
         } else {
             document.querySelector('.search').classList.remove('open');
         }
-
     }
 
     useEffect(() => {
@@ -40,10 +39,6 @@ const Locations = () => {
             .then(res => setSuggestions(res.data.results))
     }, [inputValue])
 
-    useEffect(() => {
-        document.querySelector('.search').classList.remove('open');
-        setInputValue('');
-    }, [selectedLocation])
 
     const onSelectedLocation = ({ target }) => {
         setSelectedLocation(target.textContent)
@@ -51,11 +46,20 @@ const Locations = () => {
     }
 
     useEffect(() => {
+        document.querySelector('.search').classList.remove('open');
+        setInputValue('');
         axios
             .get(`https://rickandmortyapi.com/api/location?name=${selectedLocation}`)
             .then(res => setLocation(res.data.results[0]))
         setInputValue('');
     }, [selectedLocation])
+
+    useEffect(() => {
+        const randomId = Math.floor(Math.random() * 126) + 1
+        axios
+            .get(`https://rickandmortyapi.com/api/location/${randomId}`)
+            .then(rest => setLocation(rest.data))
+    }, [])
 
     console.log(location)
 
@@ -73,25 +77,26 @@ const Locations = () => {
                         onChange={onShowSuggest}
                         placeholder='Search a location'
                     />
-
-                    <ul className="suggests">
-                        {
-                            suggestions?.length
-                                ?
-                                <>
-                                    {
-                                        suggestions.map(suggestion => (
-                                            <li
-                                                onClick={onSelectedLocation}
-                                                className="suggest__item"
-                                                key={suggestion.id}>{suggestion.name}</li>
-                                        ))
-                                    }
-                                </>
-                                :
-                                <li>No results</li>
-                        }
-                    </ul>
+                    {isOpened && (
+                        <ul ref={ref} className="suggests">
+                            {
+                                suggestions?.length
+                                    ?
+                                    <>
+                                        {
+                                            suggestions.map(suggestion => (
+                                                <li
+                                                    onClick={onSelectedLocation}
+                                                    className="suggest__item"
+                                                    key={suggestion.id}>{suggestion.name}</li>
+                                            ))
+                                        }
+                                    </>
+                                    :
+                                    <li>No results</li>
+                            }
+                        </ul>
+                    )}
 
                     <button onClick={searchLocationById}>Run</button>
                 </form>
